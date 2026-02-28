@@ -5,11 +5,12 @@ import { useGameStore } from '../stores/gameStore'
 
 const gameStore = useGameStore()
 
-// 1. Definimos las reglas estrictas con Yup (Requisito obligatorio)
+// 1. Definimos las reglas estrictas con Yup
 const schema = yup.object({
   titulo: yup.string().required('El título es obligatorio').min(3, 'Mínimo 3 letras'),
   precio: yup.number().required('El precio es obligatorio').positive('Debe ser mayor a 0'),
-  stock: yup.number().required('El stock es obligatorio').integer('Sin decimales').min(0, 'No puede ser negativo')
+  stock: yup.number().required('El stock es obligatorio').integer('Sin decimales').min(0, 'No puede ser negativo'),
+  imagen: yup.string().url('Debe ser una URL válida').nullable() // <-- Validación de URL
 })
 
 // 2. Iniciamos el formulario con VeeValidate
@@ -21,24 +22,18 @@ const { handleSubmit, resetForm } = useForm({
 const { value: titulo, errorMessage: tituloError } = useField<string>('titulo')
 const { value: precio, errorMessage: precioError } = useField<number>('precio')
 const { value: stock, errorMessage: stockError } = useField<number>('stock')
+const { value: imagen, errorMessage: imagenError } = useField<string>('imagen') 
 
-// 4. Función para guardar (usa la Acción de Pinia)
+// 4. Función para guardar (usa la Acción de Pinia + Axios)
 const onSubmit = handleSubmit((values) => {
-  
-  // Calculamos el siguiente ID disponible
-  const nuevoId = gameStore.juegos.length > 0 
-    ? Math.max(...gameStore.juegos.map(j => j.id)) + 1 
-    : 1;
-
   gameStore.agregarJuego({
-    id: nuevoId, // Usamos el ID calculado
     titulo: values.titulo,
     precio: values.precio,
     stock: values.stock,
     categoriaId: 1, 
-    imagen: ''
+    imagen: values.imagen || '' // <-- Guardamos la URL o lo dejamos vacío
   })
-  resetForm() // Limpiamos el formulario tras guardar
+  resetForm() 
 })
 </script>
 
@@ -71,6 +66,13 @@ const onSubmit = handleSubmit((values) => {
             ></v-text-field>
           </v-col>
         </v-row>
+
+        <v-text-field
+          v-model="imagen"
+          :error-messages="imagenError"
+          label="URL de la portada (Opcional)"
+          class="mt-2"
+        ></v-text-field>
 
         <v-btn type="submit" color="primary" class="mt-4">
           Guardar Juego

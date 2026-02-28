@@ -1,26 +1,44 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Categoria } from '../types' 
+import type { Categoria } from '../types'
+import axios from 'axios'
 
 export const useCategoryStore = defineStore('categories', () => {
-  // 1. ESTADO: Metemos 2 categorías de prueba
-  const categorias = ref<Categoria[]>([
-    { id: 1, nombre: 'Aventura', descripcion: 'Juegos de exploración y mundo abierto' },
-    { id: 2, nombre: 'RPG', descripcion: 'Juegos de rol y desarrollo de personajes' }
-  ])
-  
-  // 2. ACCIONES
-  const agregarCategoria = (nuevaCategoria: Categoria) => {
-    categorias.value.push(nuevaCategoria)
+  // 1. ESTADO: Empieza vacío
+  const categorias = ref<Categoria[]>([])
+
+  // 2. ACCIONES CON AXIOS
+  const cargarCategorias = async () => {
+    try {
+      const respuesta = await axios.get('http://localhost:3000/categorias')
+      categorias.value = respuesta.data
+    } catch (error) {
+      console.error('Error al cargar las categorías:', error)
+    }
   }
 
-  const borrarCategoria = (id: number) => {
-    categorias.value = categorias.value.filter(c => c.id !== id)
+  const agregarCategoria = async (nuevaCategoria: Omit<Categoria, 'id'>) => {
+    try {
+      const respuesta = await axios.post('http://localhost:3000/categorias', nuevaCategoria)
+      categorias.value.push(respuesta.data)
+    } catch (error) {
+      console.error('Error al guardar la categoría:', error)
+    }
   }
-  
+
+  const borrarCategoria = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:3000/categorias/${id}`)
+      categorias.value = categorias.value.filter(c => c.id !== id)
+    } catch (error) {
+      console.error('Error al borrar la categoría:', error)
+    }
+  }
+
   // 3. RETORNO
   return {
     categorias,
+    cargarCategorias,
     agregarCategoria,
     borrarCategoria
   }

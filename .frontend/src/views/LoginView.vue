@@ -2,15 +2,27 @@
 import AuthLayout from '../layouts/AuthLayout.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/authStore' // Importamos el store
 
 const router = useRouter()
+const authStore = useAuthStore() // Activamos el store
+
 const email = ref('')
 const password = ref('')
+const mensajeError = ref('') // Para mostrar un aviso si falla
 
-// Función simulada: Al "loguearse" te manda directamente al panel de Admin
-const hacerLogin = () => {
+const hacerLogin = async () => {
+  mensajeError.value = '' // Limpiamos el error previo
+  
   if (email.value && password.value) {
-    router.push('/admin')
+    // Llamamos al store y esperamos su respuesta
+    const exito = await authStore.login(email.value, password.value)
+    
+    if (exito) {
+      router.push('/admin') // ¡Pa' dentro!
+    } else {
+      mensajeError.value = 'Email o contraseña incorrectos ❌'
+    }
   }
 }
 </script>
@@ -48,9 +60,14 @@ const hacerLogin = () => {
               <v-btn type="submit" color="primary" block size="x-large" class="mt-4 text-none">
                 Entrar al Panel Admin
               </v-btn>
+
+              <p v-if="mensajeError" class="text-error mt-4 text-center font-weight-bold">
+                {{ mensajeError }}
+              </p>
+
             </v-form>
 
-            <v-btn variant="text" block class="mt-4 text-none text-grey">
+            <v-btn to="/" variant="text" block class="mt-4 text-none text-grey">
               Volver a la tienda
             </v-btn>
             

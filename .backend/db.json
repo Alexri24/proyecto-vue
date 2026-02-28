@@ -1,0 +1,61 @@
+{
+  "juegos": [
+    {
+      "id": 1,
+      "titulo": "The Legend of Zelda",
+      "categoriaId": 1,
+      "precio": 59.99,
+      "stock": 10,
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/e/e7/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg"
+    },
+    {
+      "id": 2,
+      "titulo": "Elden Ring",
+      "categoriaId": 2,
+      "precio": 49.99,
+      "stock": 5,
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/b/b9/Elden_Ring_Box_art.jpg"
+    },
+    {
+      "titulo": "Fifa",
+      "precio": "45",
+      "stock": "12",
+      "categoriaId": 1,
+      "imagen": "",
+      "id": 3
+    },
+    {
+      "titulo": "Super Mario Odyssey",
+      "precio": "30",
+      "stock": "5",
+      "categoriaId": 1,
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg",
+      "id": 4
+    }
+  ],
+  "categorias": [
+    {
+      "id": 1,
+      "nombre": "Aventura",
+      "descripcion": "Juegos de exploración y mundo abierto"
+    },
+    {
+      "id": 2,
+      "nombre": "RPG",
+      "descripcion": "Juegos de rol y desarrollo de personajes"
+    },
+    {
+      "nombre": "Deportes",
+      "descripcion": "Deportes varios",
+      "id": 3
+    }
+  ],
+  "usuarios": [
+    {
+      "id": 1,
+      "email": "admin@gamestore.com",
+      "password": "123",
+      "rol": "admin"
+    }
+  ]
+}

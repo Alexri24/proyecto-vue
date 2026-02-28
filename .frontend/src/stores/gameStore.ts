@@ -1,27 +1,48 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Videojuego } from '../types' 
+import type { Videojuego } from '../types'
+import axios from 'axios' // Importamos Axios para las peticiones
 
 export const useGameStore = defineStore('games', () => {
-  // 1. ESTADO
-  const juegos = ref<Videojuego[]>([
-    { id: 1, titulo: 'The Legend of Zelda', categoriaId: 1, precio: 59.99, stock: 10, imagen: '' },
-    { id: 2, titulo: 'Elden Ring', categoriaId: 2, precio: 49.99, stock: 5, imagen: '' }
-  ])
+  // 1. ESTADO: Ahora empieza vacío, los datos vendrán del servidor
+  const juegos = ref<Videojuego[]>([])
+
+  // 2. ACCIONES REALES CON LA BASE DE DATOS
   
-  // 2. ACCIONES
-  const agregarJuego = (nuevoJuego: Videojuego) => {
-    juegos.value.push(nuevoJuego)
+  // OBTENER (GET): Pide los juegos al servidor
+  const cargarJuegos = async () => {
+    try {
+      const respuesta = await axios.get('http://localhost:3000/juegos')
+      juegos.value = respuesta.data // Guardamos los datos reales en nuestra variable
+    } catch (error) {
+      console.error('Error al cargar los juegos:', error)
+    }
   }
 
-  // NUEVO: Función para borrar un juego filtrando por su ID
-  const borrarJuego = (id: number) => {
-    juegos.value = juegos.value.filter(juego => juego.id !== id)
+  // AÑADIR (POST): Envía un nuevo juego al servidor
+  const agregarJuego = async (nuevoJuego: Omit<Videojuego, 'id'>) => { // Omitimos el ID porque lo crea el servidor
+    try {
+      const respuesta = await axios.post('http://localhost:3000/juegos', nuevoJuego)
+      juegos.value.push(respuesta.data) // Añadimos el juego devuelto (ya con su ID real) a la vista
+    } catch (error) {
+      console.error('Error al guardar el juego:', error)
+    }
   }
-  
-  // 3. RETORNO (¡Asegúrate de exportar borrarJuego aquí abajo!)
+
+  // BORRAR (DELETE): Le dice al servidor que borre un juego
+  const borrarJuego = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:3000/juegos/${id}`)
+      juegos.value = juegos.value.filter(j => j.id !== id) // Lo quitamos de la vista si el servidor lo borró bien
+    } catch (error) {
+      console.error('Error al borrar el juego:', error)
+    }
+  }
+
+  // 3. RETORNO
   return {
     juegos,
+    cargarJuegos,
     agregarJuego,
     borrarJuego
   }
