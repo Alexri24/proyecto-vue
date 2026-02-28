@@ -38,6 +38,19 @@ export const useGameStore = defineStore('games', () => {
       console.error('Error al borrar el juego:', error)
     }
   }
+  // ACTUALIZAR (PUT): Modifica un juego existente
+  const actualizarJuego = async (id: number, juegoEditado: Videojuego) => {
+    try {
+      const respuesta = await axios.put(`http://localhost:3000/juegos/${id}`, juegoEditado)
+      // Buscamos el juego en nuestra lista y lo sustituimos por el nuevo
+      const index = juegos.value.findIndex(j => j.id === id)
+      if (index !== -1) {
+        juegos.value[index] = respuesta.data
+      }
+    } catch (error) {
+      console.error('Error al actualizar el juego:', error)
+    }
+  }
 
   // 3. RETORNO
   return {

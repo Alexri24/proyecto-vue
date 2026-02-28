@@ -1,18 +1,41 @@
 <script setup lang="ts">
 import MainLayout from '../layouts/MainLayout.vue'
 import { useGameStore } from '../stores/gameStore'
+import { ref, computed } from 'vue' // <-- NUEVO: Importamos ref y computed
 
-// Conectamos con el store para leer los juegos
 const gameStore = useGameStore()
+
+// <-- NUEVO: Variable para guardar lo que escribe el usuario
+const busqueda = ref('') 
+
+// <-- NUEVO: Filtramos los juegos automáticamente según lo que escriba
+const juegosFiltrados = computed(() => {
+  return gameStore.juegos.filter(juego => 
+    juego.titulo.toLowerCase().includes(busqueda.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
   <MainLayout>
     <v-container>
-      <h1 class="text-h3 text-center my-8 font-weight-bold">Catálogo de Videojuegos</h1>
+      <h1 class="text-h3 text-center mt-8 mb-4 font-weight-bold">Catálogo de Videojuegos</h1>
+
+      <v-row justify="center">
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="busqueda"
+            label="🔍 Buscar videojuego por título..."
+            variant="solo-filled"
+            elevation="2"
+            clearable
+            class="mb-6"
+          ></v-text-field>
+        </v-col>
+      </v-row>
 
       <v-row>
-        <v-col v-for="juego in gameStore.juegos" :key="juego.id" cols="12" sm="6" md="4" lg="3">
+        <v-col v-for="juego in juegosFiltrados" :key="juego.id" cols="12" sm="6" md="4" lg="3">
           <v-card class="mx-auto h-100 d-flex flex-column" hover>
             
             <v-img
@@ -42,6 +65,13 @@ const gameStore = useGameStore()
           </v-card>
         </v-col>
       </v-row>
+
+      <v-row v-if="juegosFiltrados.length === 0">
+        <v-col class="text-center text-grey mt-4">
+          <h3>No se han encontrado juegos con ese nombre 😢</h3>
+        </v-col>
+      </v-row>
+
     </v-container>
   </MainLayout>
 </template>
