@@ -1,13 +1,22 @@
 version: '3.8'
+
 services:
+  backend:
+    build: 
+      context: ./.backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.backend/db.json:/app/db.json
+
   frontend:
     build: 
-      context: ./.frontend
+      context: ./.frontend     # <-- Le decimos que el Dockerfile está en .frontend
     ports:
       - "5173:5173"
+    depends_on:
+      - backend
     volumes:
-      - ./.frontend:/app
+      - ./.frontend:/app       # <-- Le decimos que el código está en .frontend
       - /app/node_modules
     command: npm run dev -- --host 0.0.0.0
-
-  # Más adelante añadiremos aquí el backend simulado

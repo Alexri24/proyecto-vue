@@ -4,8 +4,8 @@
       "id": 1,
       "titulo": "The Legend of Zelda",
       "categoriaId": 1,
-      "precio": 59.99,
-      "stock": 10,
+      "precio": "59.98",
+      "stock": "9",
       "imagen": "https://upload.wikimedia.org/wikipedia/en/e/e7/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg"
     },
     {
