@@ -56,6 +56,10 @@
       "email": "admin@gamestore.com",
       "password": "123",
       "rol": "admin"
-    }
+    },
+    { "id": 2, 
+    "email": "empleado@gamestore.com", 
+    "password": "123", 
+    "rol": "empleado" }
   ]
 }

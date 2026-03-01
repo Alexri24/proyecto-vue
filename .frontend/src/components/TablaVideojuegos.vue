@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useGameStore } from '../stores/gameStore'
+import { useAuthStore } from '../stores/authStore' // <-- NUEVO: Importamos el store del usuario
 import type { Videojuego } from '../types'
 
 const gameStore = useGameStore()
+const authStore = useAuthStore() // <-- NUEVO: Lo activamos
 
 // Variables para controlar la ventanita (Modal)
 const modalAbierto = ref(false)
@@ -11,14 +13,14 @@ const juegoEditando = ref<Videojuego>({ id: 0, titulo: '', precio: 0, stock: 0, 
 
 // Función para abrir la ventana con los datos cargados
 const abrirModal = (juego: Videojuego) => {
-  juegoEditando.value = { ...juego } // Hacemos una copia para no cambiar la tabla hasta guardar
+  juegoEditando.value = { ...juego } 
   modalAbierto.value = true
 }
 
 // Función para guardar y cerrar
 const guardarEdicion = async () => {
   await gameStore.actualizarJuego(juegoEditando.value.id, juegoEditando.value)
-  modalAbierto.value = false // Cerramos el modal
+  modalAbierto.value = false 
 }
 </script>
 
@@ -46,7 +48,15 @@ const guardarEdicion = async () => {
           </td>
           <td>
             <v-btn color="primary" size="small" variant="text" class="mr-2" @click="abrirModal(juego)">Editar</v-btn>
-            <v-btn color="error" size="small" variant="text" @click="gameStore.borrarJuego(juego.id)">Borrar</v-btn>
+            
+            <v-btn 
+              v-if="authStore.usuarioActual?.rol === 'admin'" 
+              color="error" 
+              size="small" 
+              variant="text" 
+              @click="gameStore.borrarJuego(juego.id)">
+              Borrar
+            </v-btn>
           </td>
         </tr>
       </tbody>
@@ -70,6 +80,5 @@ const guardarEdicion = async () => {
         </v-card-actions>
       </v-card>
     </v-dialog>
-
   </v-card>
 </template>
