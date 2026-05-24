@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
-import { useAuthStore } from '../stores/authStore' // 1. Importamos el store
-import { useRouter } from 'vue-router' // 2. Importamos el router para redirigir
+import { useAuthStore } from '../stores/authStore'
+import { useRouter } from 'vue-router'
 
 const theme = useTheme()
 const authStore = useAuthStore()
@@ -11,35 +11,64 @@ const cambiarTema = () => {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
 
-// 3. Función para salir
 const cerrarSesion = () => {
-  authStore.logout() // Borramos el usuario de Pinia
-  router.push('/login') // Lo mandamos al login
+  authStore.logout()
+  router.push('/login')
 }
 </script>
 
 <template>
   <v-layout>
-    <v-app-bar color="blue-grey-darken-4" elevation="4">
-      <v-app-bar-title class="font-weight-bold text-cyan-accent-4">
-        ⚙️ Panel de Control
+    <!-- Navbar Admin — mismo estilo oscuro que el MainLayout -->
+    <v-app-bar flat height="64" theme="dark" style="background: #0f0f1a; border-bottom: 1px solid rgba(255,255,255,0.07);">
+
+      <v-app-bar-title>
+        <div class="d-flex align-center">
+          <v-icon icon="mdi-shield-crown" color="warning" size="24" class="mr-2" />
+          <span class="text-h6 font-weight-black text-white" style="letter-spacing: -0.5px;">Panel Admin</span>
+        </div>
       </v-app-bar-title>
-      
-      <v-spacer></v-spacer>
 
-      <v-btn icon @click="cambiarTema" class="mr-4">
-        <span class="text-h6">{{ theme.global.current.value.dark ? '☀️' : '🌙' }}</span>
+      <v-spacer />
+
+      <!-- Usuario logueado -->
+      <v-chip
+        v-if="authStore.usuarioActual"
+        color="primary"
+        variant="tonal"
+        size="small"
+        prepend-icon="mdi-account-circle"
+        class="mr-4 font-weight-bold"
+      >
+        {{ authStore.usuarioActual.email }} · {{ authStore.usuarioActual.rol }}
+      </v-chip>
+
+      <v-btn to="/" variant="text" size="small" class="text-none mr-2" style="opacity:0.8;">
+        <v-icon start icon="mdi-storefront" />
+        Ver Tienda
       </v-btn>
 
-      <v-btn to="/" variant="text" class="mr-2">Ver Tienda</v-btn>
-      
-      <v-btn color="error" variant="flat" class="mr-4" @click="cerrarSesion">
-        Cerrar Sesión
+      <v-btn icon size="40" class="mr-1" @click="cambiarTema">
+        <v-icon :icon="theme.global.current.value.dark ? 'mdi-weather-sunny' : 'mdi-weather-night'" />
       </v-btn>
+
+      <v-btn
+        color="error"
+        variant="tonal"
+        size="small"
+        rounded="pill"
+        class="text-none font-weight-bold mr-3"
+        prepend-icon="mdi-logout"
+        @click="cerrarSesion"
+      >
+        Salir
+      </v-btn>
+
     </v-app-bar>
 
     <v-main>
-      <slot></slot>
+      <slot />
     </v-main>
+
   </v-layout>
 </template>

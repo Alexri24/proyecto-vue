@@ -5,53 +5,57 @@ import { useCategoryStore } from '../stores/categoryStore'
 
 const categoryStore = useCategoryStore()
 
-// 1. Reglas de validación
 const schema = yup.object({
-  nombre: yup.string().required('El nombre es obligatorio').min(3, 'Mínimo 3 letras'),
+  nombre: yup.string().required('El nombre es obligatorio').min(3, 'Mínimo 3 caracteres'),
   descripcion: yup.string().required('La descripción es obligatoria')
 })
 
-// 2. Iniciamos el formulario
-const { handleSubmit, resetForm } = useForm({
-  validationSchema: schema,
-})
-
-// 3. Conectamos los campos
+const { handleSubmit, resetForm } = useForm({ validationSchema: schema })
 const { value: nombre, errorMessage: nombreError } = useField<string>('nombre')
 const { value: descripcion, errorMessage: descripcionError } = useField<string>('descripcion')
 
-// 4. Función para guardar en la base de datos (vía Pinia + Axios)
 const onSubmit = handleSubmit((values) => {
-  categoryStore.agregarCategoria({
-    nombre: values.nombre,
-    descripcion: values.descripcion
-  })
+  categoryStore.agregarCategoria({ nombre: values.nombre, descripcion: values.descripcion })
   resetForm()
 })
 </script>
 
 <template>
-  <v-card title="Añadir Nueva Categoría" class="mt-4 mb-8" flat border>
-    <v-card-text>
-      <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit">
+    <v-row>
+      <v-col cols="12" md="5">
         <v-text-field
           v-model="nombre"
           :error-messages="nombreError"
-          label="Nombre de la Categoría"
-          class="mb-2"
-        ></v-text-field>
-
-        <v-textarea
+          label="Nombre de la categoría"
+          variant="outlined"
+          rounded="lg"
+          density="comfortable"
+          prepend-inner-icon="mdi-tag-outline"
+        />
+      </v-col>
+      <v-col cols="12" md="7">
+        <v-text-field
           v-model="descripcion"
           :error-messages="descripcionError"
           label="Descripción"
-          rows="2"
-        ></v-textarea>
-
-        <v-btn type="submit" color="cyan-darken-2" class="mt-2 text-none font-weight-bold">
-          Guardar Categoría
-        </v-btn>
-      </form>
-    </v-card-text>
-  </v-card>
+          variant="outlined"
+          rounded="lg"
+          density="comfortable"
+          prepend-inner-icon="mdi-text"
+        />
+      </v-col>
+    </v-row>
+    <v-btn type="submit" rounded="pill" class="text-none font-weight-bold save-btn" size="large">
+      <v-icon start icon="mdi-plus" />
+      Guardar Categoría
+    </v-btn>
+  </form>
 </template>
+
+<style scoped>
+.save-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: white !important;
+}
+</style>
