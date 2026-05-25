@@ -6,7 +6,7 @@
       "categoriaId": 1,
       "precio": "59.98",
       "stock": "9",
-      "imagen": "https://picsum.photos/seed/zelda/600/400"
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/e/e7/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg"
     },
     {
       "id": 2,
@@ -14,14 +14,14 @@
       "categoriaId": 2,
       "precio": 49.99,
       "stock": 5,
-      "imagen": "https://picsum.photos/seed/eldenring/600/400"
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/b/b9/Elden_Ring_Box_art.jpg"
     },
     {
       "titulo": "Fifa",
       "precio": "45",
       "stock": "12",
       "categoriaId": 1,
-      "imagen": "https://picsum.photos/seed/fifa2024/600/400",
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/a/a6/FIFA_23_Cover.jpg",
       "id": 3
     },
     {
@@ -29,7 +29,7 @@
       "precio": "30",
       "stock": "5",
       "categoriaId": 1,
-      "imagen": "https://picsum.photos/seed/mario/600/400",
+      "imagen": "https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg",
       "id": 4
     }
   ],
