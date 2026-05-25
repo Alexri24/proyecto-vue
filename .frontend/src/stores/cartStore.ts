@@ -3,10 +3,6 @@
  *  cartStore.ts — Store del Carrito de Compra
  * ══════════════════════════════════════════
  *
- * DIFERENCIA con gameStore:
- * Este store NO hace llamadas a la API (axios).
- * El carrito es un estado TEMPORAL que vive solo en el navegador.
- * Al recargar la página, el carrito se vacía (comportamiento normal).
  *
  * CONCEPTOS USADOS:
  *   - ref()      → el array de items (estado mutable)
